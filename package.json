@@ -1,7 +1,7 @@
 {
   "name": "codex-phone-transfer",
   "version": "0.1.0",
-  "description": "Send files generated on a Mac to WeChat through OpenClaw.",
+  "description": "A Codex skill for sending local Mac files to WeChat.",
   "type": "module",
   "bin": {
     "cpt": "./bin/cpt.js"

@@ -1,12 +1,13 @@
 ---
 name: send-to-wechat
-description: Send one or more local files from the Mac to the user's phone through their configured OpenClaw WeChat channel. Use when the user asks to send, transfer, push, or share a generated file, report, image, video, archive, or other artifact to WeChat or their phone, including Chinese requests such as "传到微信", "发到手机", or "微信发给我".
+description: Send one or more local files from the Mac to the user's phone through their configured WeChat transfer channel. Use when the user asks to send, transfer, push, or share a generated file, report, image, video, archive, or other artifact to WeChat or their phone, including Chinese requests such as "传到微信", "发到手机", or "微信发给我".
 ---
 
 # Send to WeChat
 
-Use the installed `cpt` CLI. It delegates authentication and delivery to the
-official Tencent WeChat plugin running in the OpenClaw Gateway.
+Use the installed `cpt` command as the skill's transport helper. The user
+interacts with Codex only; do not treat the background WeChat transport as
+another agent or conversational entry point.
 
 ## Send Files
 
@@ -29,8 +30,8 @@ cpt send -m "本周报告" -- "/absolute/path/report.pdf" "/absolute/path/chart.
 If sending fails:
 
 1. Run `cpt doctor`.
-2. If no target is selected, ask the user to send the OpenClaw bot one WeChat
-   message, then run `cpt pair`.
+2. If no target is selected, ask the user to send the WeChat transfer contact
+   one message, then run `cpt pair`.
 3. If login is stale, run `cpt login`, wait for the user to scan the QR code,
    then run `cpt pair --wait`.
 4. Retry `cpt send` only after the prior command definitively failed. Do not
@@ -38,7 +39,7 @@ If sending fails:
 
 ## Safety
 
-- Never print, read aloud, or include OpenClaw bot tokens or WeChat context
+- Never print, read aloud, or include transport credentials or WeChat context
   tokens in responses.
 - Do not bypass `cpt` by invoking private WeChat endpoints.
 - Do not claim that a dry run delivered a file.

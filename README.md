@@ -1,20 +1,26 @@
 # codex-phone-transfer
 
-把 Mac 上由 Codex 生成的文件直接发送到手机微信。微信桌面端和浏览器都
-不需要常驻；真正的鉴权和上传由 OpenClaw Gateway 及腾讯微信团队维护的
-`@tencent-weixin/openclaw-weixin` 插件完成。
+一个很小的 Codex skill：把 Mac 上的本地文件直接发送到手机微信。
 
-## 工作方式
+日常使用只有一个入口，直接对 Codex 说：
+
+> 把刚生成的报告传到我手机微信。
+
+Codex 会调用 `send-to-wechat` skill 完成发送。微信桌面端和浏览器都不
+需要常驻，也不需要在微信里向另一个 AI 下指令。
+
+## 边界
 
 ```text
-Codex -> cpt -> OpenClaw Gateway -> 腾讯微信插件 -> 手机微信
-                  |
-                  +-- macOS launchd 自动启动
+Codex -> send-to-wechat skill -> cpt -> 微信传输通道 -> 手机微信
 ```
 
-`cpt` 不实现或复刻微信私有协议。发送时，它把文件临时复制到 OpenClaw
-允许读取的媒体目录，调用 Gateway 的 `send` RPC，成功或失败后都会清理
-临时副本。
+这个项目不是 OpenClaw agent，也不接收来自微信的 Codex 指令。`cpt`
+只是 skill 内部使用的本机传输脚本。
+
+当前微信官方插件以 OpenClaw Gateway 作为运行宿主，因此一次性安装时会
+配置该后台组件；它只负责维持腾讯微信通道和投递文件，不参与生成内容或
+处理用户任务。`cpt` 不实现或复刻微信私有协议。
 
 ## 要求
 
@@ -42,7 +48,9 @@ cpt setup
 常驻，插件的账号 token、会话 context token 和同步游标保存在本机
 `~/.openclaw` 中，并可在 Gateway 重启后恢复。
 
-## 使用
+## 直接使用
+
+安装完成后，优先直接让 Codex 发送。下面的命令主要用于测试和故障恢复：
 
 ```bash
 # 发送一个文件
@@ -59,10 +67,6 @@ cpt targets
 cpt use '<target>@im.wechat' --account '<account-id>'
 ```
 
-安装 skill 后，也可以直接对 Codex 说：
-
-> 把刚生成的报告传到我手机微信。
-
 ## 登录与会话恢复
 
 微信插件采用长轮询，不依赖微信桌面端。微信如果判定账号 token 失效，
@@ -74,7 +78,7 @@ cpt pair --wait
 ```
 
 微信要求每次主动发送都带上最近一条入站消息的 context token。因此，
-首次扫码后需要在手机里先给该 OpenClaw 对话发一条消息。以后插件会在
+首次扫码后需要在手机里先给该微信传输对话发一条消息。以后插件会在
 本机维护和恢复这个上下文；若发送提示缺少上下文，再发一条消息并运行
 `cpt pair --wait`。
 
