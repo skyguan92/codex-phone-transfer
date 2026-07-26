@@ -1,0 +1,4 @@
+interface:
+  display_name: "Send to WeChat"
+  short_description: "Send local files from Codex to your WeChat phone"
+  default_prompt: "Use $send-to-wechat to send the generated file to my WeChat phone."

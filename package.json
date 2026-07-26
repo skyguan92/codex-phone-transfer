@@ -1,0 +1,36 @@
+{
+  "name": "codex-phone-transfer",
+  "version": "0.1.0",
+  "description": "Send files generated on a Mac to WeChat through OpenClaw.",
+  "type": "module",
+  "bin": {
+    "cpt": "./bin/cpt.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    ".agents/skills/send-to-wechat",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "check": "node --check bin/cpt.js && node --check src/*.js",
+    "test": "node --test",
+    "validate:skill": "uv run --with pyyaml python \"$HOME/.codex/skills/.system/skill-creator/scripts/quick_validate.py\" .agents/skills/send-to-wechat"
+  },
+  "engines": {
+    "node": ">=24.15.0 <25"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skyguan92/codex-phone-transfer.git"
+  },
+  "keywords": [
+    "codex",
+    "openclaw",
+    "wechat",
+    "weixin",
+    "file-transfer"
+  ]
+}
