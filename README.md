@@ -82,12 +82,19 @@ openclaw plugins install npm:@openclaw/codex
 openclaw config set plugins.entries.codex.config \
   '{"appServer":{"transport":"stdio","homeScope":"user","command":"'"$HOME"'/.local/bin/codex-e","args":["app-server","--listen","stdio://"]}}' \
   --strict-json
+
+# 让进度消息发送后继续执行，并自动投递最终回复
+openclaw config set messages.visibleReplies automatic
 ```
 
 然后创建一个专用 agent，并按 `channel + accountId + direct peer id` 精确
 绑定微信私聊。模型和推理强度应在该 agent 上明确设置；当前验证过的配置
 为 `codex/gpt-5.6-sol` 和 `thinkingDefault: "max"`。不要只做
 channel-wide 绑定，否则同一微信通道里的其他用户也可能触发 Codex。
+
+`messages.visibleReplies: "automatic"` 对 Codex 直聊很重要。若沿用
+`message_tool` 模式，Codex 发出的中间进度消息可能被通道当成该轮的终止
+回复，表现为微信只收到“我先检查……”而没有最终结果。
 
 绑定后可在微信里发送 `/status` 检查当前会话，或直接发送普通任务。
 
